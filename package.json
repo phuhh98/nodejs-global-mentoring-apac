@@ -1,0 +1,19 @@
+{
+  "name": "hometask1",
+  "version": "0.0.1",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "task1": "nodemon --exec \"node task1.js\" --watch ./task1.js "
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.epam.com/phu_huynh/nodejs-homework1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
