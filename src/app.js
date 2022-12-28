@@ -13,15 +13,12 @@ app.use(express.json());
 
 app.use('/user', userRouter);
 
-app.get('/', (req, res) => {
-    res.send('lolo');
-});
-
-app.use((error, req, res, next) => {
-    res.status(error.status ? error.status : 500).json({
-        error: error.message
-    });
-    next();
+app.use((error, req, res) => {
+    if (error?.message) {
+        res.status(error.status ? error.status : 500).json({
+            error: error.message
+        });
+    }
 });
 
 app.listen(PORT, () => {

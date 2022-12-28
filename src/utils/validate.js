@@ -12,7 +12,6 @@ const errorResponse = schemaErrors => {
 const validateSchema = schema => {
     return (req, res, next) => {
         const { toBeValidated } = res.locals;
-        console.log('tobevalidated', toBeValidated);
         const { error } = schema.validate(toBeValidated, {
             abortEarly: true,
             allowUnknown: false

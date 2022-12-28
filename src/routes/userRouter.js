@@ -4,7 +4,7 @@ const { validateSchema } = require('../utils/validate');
 const { userSchema } = require('../utils/schemas');
 const {
     getUserByIdHandler,
-    getUsersByqueryHandler,
+    getUsersByQueryHandler,
     findUserByIdMiddleware,
     validateLoginCredential,
     createUserHandler,
@@ -17,7 +17,7 @@ const {
 const router = express.Router();
 
 router.get('/:id', findUserByIdMiddleware, getUserByIdHandler);
-router.get('/', getUsersByqueryHandler);
+router.get('/', getUsersByQueryHandler);
 router.post(
     '/',
     userToBeValidatedOnCreation,

@@ -7,7 +7,7 @@ function getUserByIdHandler(req, res) {
     res.status(200).json(user);
 }
 
-function getUsersByqueryHandler(req, res) {
+function getUsersByQueryHandler(req, res) {
     const { limit, loginSubstring } = req.query;
     const limitedUserList = Users.getAutoSuggestUsers(loginSubstring, limit);
     console.log(limitedUserList);
@@ -83,7 +83,7 @@ function userToBeValidatedOnUpdate(req, res, next) {
 
 module.exports = {
     getUserByIdHandler,
-    getUsersByqueryHandler,
+    getUsersByQueryHandler,
     createUserHandler,
     updateUserHandler,
     deleteUserHandler,

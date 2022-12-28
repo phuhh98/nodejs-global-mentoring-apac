@@ -62,7 +62,7 @@ class Users {
                 user =>
                     user.login
                         .toLowerCase()
-                        .indexOf(loginSubstring.toLowerCase()) !== -1
+                        .indexOf(loginSubstring?.toLowerCase()) !== -1
             )
             .sort((userA, userB) => (userA.login > userB.login ? 1 : -1))
             .slice(0, limit - 1);
