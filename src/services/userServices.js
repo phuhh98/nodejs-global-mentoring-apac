@@ -17,14 +17,14 @@ class Users {
         const foundUser = this.findUserByLogin(user.login);
         if (!foundUser) {
             this.#store.push(user);
-            return user;
         } else {
             return new Error('login is existed');
         }
+        return user;
     }
     findUserById(userId) {
-        const user = this.#store.find(user => user.id === userId);
-        return !!user ? user : false;
+        const foundUser = this.#store.find(user => user.id === userId);
+        return !!foundUser ? foundUser : false;
     }
     findIndexById(userId) {
         const index = this.#store.findIndex(user => user.id === userId);
@@ -32,28 +32,28 @@ class Users {
     }
 
     findUserByLogin(userLogin) {
-        const user = this.#store.find(user => user.login === userLogin);
-        return !!user ? user : false;
+        const foundUser = this.#store.find(user => user.login === userLogin);
+        return !!foundUser ? foundUser : false;
     }
 
     updateUserById(userId, payload) {
-        let userIndex = this.findIndexById(userId);
+        const userIndex = this.findIndexById(userId);
         if (userIndex >= 0) {
             this.#store[userIndex] = { ...this.#store[userIndex], ...payload };
-            return this.#store[userIndex];
         } else {
             return new Error("user does not exist in this services's store");
         }
+        return this.#store[userIndex];
     }
 
     markAsDeletedById(userId) {
         const userIndex = this.findIndexById(userId);
         if (userIndex >= 0) {
             this.#store[userIndex].isDeleted = true;
-            return this.#store[userIndex];
         } else {
             return new Error('Delete unsuccessfully: user does not exist');
         }
+        return this.#store[userIndex];
     }
 
     getAutoSuggestUsers(loginSubstring, limit) {
