@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 
-const { validateSchema } = require('../utils/validate');
-const { userSchema } = require('../utils/schemas');
-const {
+import { validateSchema } from '../utils/validate';
+import { userSchema } from '../utils/schemas';
+import {
     getUserByIdHandler,
     getUsersByQueryHandler,
     findUserByIdMiddleware,
@@ -12,7 +12,7 @@ const {
     deleteUserHandler,
     userToBeValidatedOnCreation,
     userToBeValidatedOnUpdate
-} = require('./userMiddlewares');
+} from './userMiddleware';
 
 const router = express.Router();
 
@@ -34,4 +34,4 @@ router.patch(
 );
 router.delete('/:id', findUserByIdMiddleware, deleteUserHandler);
 
-module.exports = router;
+export default router;

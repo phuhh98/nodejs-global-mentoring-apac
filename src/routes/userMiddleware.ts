@@ -1,20 +1,20 @@
-const { v4: uuidv4 } = require('uuid');
-const userService = require('../services/userServices');
+import { v4 as uuidv4 } from 'uuid';
+import userService from '../services/userServices';
 const Users = userService.getInstance();
 
-function getUserByIdHandler(req, res) {
+export function getUserByIdHandler(req, res) {
     const { user } = res.locals;
     res.status(200).json(user);
 }
 
-function getUsersByQueryHandler(req, res) {
+export function getUsersByQueryHandler(req, res) {
     const { limit, loginSubstring } = req.query;
     const limitedUserList = Users.getAutoSuggestUsers(loginSubstring, limit);
     console.log(limitedUserList);
     res.status(200).json(limitedUserList);
 }
 
-function createUserHandler(req, res, next) {
+export function createUserHandler(req, res, next) {
     const user = { id: uuidv4(), ...req.body, isDeleted: false };
 
     const result = Users.addUser(user);
@@ -24,7 +24,7 @@ function createUserHandler(req, res, next) {
     next({ status: 400, message: result.message });
 }
 
-function updateUserHandler(req, res, next) {
+export function updateUserHandler(req, res, next) {
     const { user } = res.locals;
     const { update: updateDetails } = req.body;
     const result = Users.updateUserById(user.id, updateDetails);
@@ -34,7 +34,7 @@ function updateUserHandler(req, res, next) {
     next({ status: 400, message: result.message });
 }
 
-function deleteUserHandler(req, res, next) {
+export function deleteUserHandler(req, res, next) {
     const { user } = res.locals;
     const result = Users.markAsDeletedById(user.id);
     if (!(result instanceof Error)) {
@@ -43,7 +43,7 @@ function deleteUserHandler(req, res, next) {
     next({ status: 400, message: result.message });
 }
 
-function findUserByIdMiddleware(req, res, next) {
+export function findUserByIdMiddleware(req, res, next) {
     const { id: userId } = req.params;
     const user = Users.findUserById(userId);
     if (!user) {
@@ -53,7 +53,7 @@ function findUserByIdMiddleware(req, res, next) {
     next();
 }
 
-function validateLoginCredential(req, res, next) {
+export function validateLoginCredential(req, res, next) {
     const { user } = res.locals;
     const { credential: reqCredential } = req.body;
 
@@ -69,26 +69,14 @@ function validateLoginCredential(req, res, next) {
     next({ status: 400, message: 'Invalid login or password' });
 }
 
-function userToBeValidatedOnCreation(req, res, next) {
+export function userToBeValidatedOnCreation(req, res, next) {
     res.locals.toBeValidated = req.body;
     next();
 }
 
-function userToBeValidatedOnUpdate(req, res, next) {
+export function userToBeValidatedOnUpdate(req, res, next) {
     const { user } = res.locals;
     const { update: updateDetails } = req.body;
     res.locals.toBeValidated = { ...user, ...updateDetails };
     next();
 }
-
-module.exports = {
-    getUserByIdHandler,
-    getUsersByQueryHandler,
-    createUserHandler,
-    updateUserHandler,
-    deleteUserHandler,
-    findUserByIdMiddleware,
-    validateLoginCredential,
-    userToBeValidatedOnCreation,
-    userToBeValidatedOnUpdate
-};

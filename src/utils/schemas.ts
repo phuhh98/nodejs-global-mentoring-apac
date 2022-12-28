@@ -1,9 +1,9 @@
-const Joi = require('joi');
+import Joi from 'joi';
 
 const MIN_AGE = 4;
 const MAX_AGE = 130;
 
-const userSchema = Joi.object().keys({
+export const userSchema = Joi.object().keys({
     id: Joi.string(),
     login: Joi.string().required(),
     password: Joi.string()
@@ -12,5 +12,3 @@ const userSchema = Joi.object().keys({
     age: Joi.number().min(MIN_AGE).max(MAX_AGE).required(),
     isDeleted: Joi.boolean()
 });
-
-module.exports = { userSchema };

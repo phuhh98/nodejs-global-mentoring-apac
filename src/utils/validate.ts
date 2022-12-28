@@ -1,4 +1,4 @@
-const errorResponse = schemaErrors => {
+export const errorResponse = schemaErrors => {
     const errors = schemaErrors.map(({ path, message }) => {
         return { path, message };
     });
@@ -9,7 +9,7 @@ const errorResponse = schemaErrors => {
     };
 };
 
-const validateSchema = schema => {
+export const validateSchema = schema => {
     return (req, res, next) => {
         const { toBeValidated } = res.locals;
         const { error } = schema.validate(toBeValidated, {
@@ -24,5 +24,3 @@ const validateSchema = schema => {
         next();
     };
 };
-
-module.exports = { validateSchema };
