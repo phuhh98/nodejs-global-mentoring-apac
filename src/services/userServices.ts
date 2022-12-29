@@ -6,22 +6,21 @@ interface User {
     isDeleted: boolean;
 }
 
-export default class Users {
-    static instance;
+export default class Userservice {
+    static instance: Userservice;
     private store: Array<User> = [];
-    constructor() {}
-    static getInstance() {
-        if (!Users.instance) {
-            Users.instance = new Users();
+    static getInstance(): Userservice {
+        if (!Userservice.instance) {
+            Userservice.instance = new Userservice();
         }
 
-        return Users.instance;
+        return Userservice.instance;
     }
-    getStore() {
+    getStore(): Array<User> {
         return this.store;
     }
 
-    addUser(user) {
+    addUser(user: User): User | Error {
         const foundUser = this.findUserByLogin(user.login);
         if (!foundUser) {
             this.store.push(user);
@@ -30,21 +29,21 @@ export default class Users {
         }
         return user;
     }
-    findUserById(userId) {
+    findUserById(userId: User['id']): User | boolean {
         const foundUser = this.store.find(user => user.id === userId);
         return !!foundUser ? foundUser : false;
     }
-    findIndexById(userId) {
+    findIndexById(userId: User['id']): number {
         const index = this.store.findIndex(user => user.id === userId);
         return index;
     }
 
-    findUserByLogin(userLogin) {
+    findUserByLogin(userLogin: User['login']): User | boolean {
         const foundUser = this.store.find(user => user.login === userLogin);
         return !!foundUser ? foundUser : false;
     }
 
-    updateUserById(userId, payload) {
+    updateUserById(userId: User['id'], payload: User): User | Error {
         const userIndex = this.findIndexById(userId);
         if (userIndex >= 0) {
             this.store[userIndex] = { ...this.store[userIndex], ...payload };
@@ -54,8 +53,8 @@ export default class Users {
         return this.store[userIndex];
     }
 
-    markAsDeletedById(userId) {
-        const userIndex = this.findIndexById(userId);
+    markAsDeletedById(userId: User['id']): User | Error {
+        const userIndex: number = this.findIndexById(userId);
         if (userIndex >= 0) {
             this.store[userIndex].isDeleted = true;
         } else {
@@ -64,7 +63,7 @@ export default class Users {
         return this.store[userIndex];
     }
 
-    getAutoSuggestUsers(loginSubstring, limit) {
+    getAutoSuggestUsers(loginSubstring: string, limit = 5): Array<User> {
         const limitedUserList = this.getStore()
             .filter(
                 user =>
@@ -73,7 +72,7 @@ export default class Users {
                         .indexOf(loginSubstring?.toLowerCase()) !== -1
             )
             .sort((userA, userB) => (userA.login > userB.login ? 1 : -1))
-            .slice(0, limit - 1);
+            .slice(0, limit);
         return limitedUserList;
     }
 }

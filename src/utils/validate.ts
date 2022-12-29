@@ -1,4 +1,7 @@
-export const errorResponse = schemaErrors => {
+import { Request, Response, NextFunction } from 'express';
+import { Schema, ValidationErrorItem } from 'joi';
+
+export const errorResponse = (schemaErrors: Array<ValidationErrorItem>) => {
     const errors = schemaErrors.map(({ path, message }) => {
         return { path, message };
     });
@@ -9,8 +12,8 @@ export const errorResponse = schemaErrors => {
     };
 };
 
-export const validateSchema = schema => {
-    return (req, res, next) => {
+export const validateSchema = (schema: Schema) => {
+    return (req: Request, res: Response, next: NextFunction) => {
         const { toBeValidated } = res.locals;
         const { error } = schema.validate(toBeValidated, {
             abortEarly: true,

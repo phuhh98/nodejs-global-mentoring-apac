@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Router } from 'express';
 
 import { validateSchema } from '../utils/validate';
 import { userSchema } from '../utils/schemas';
@@ -14,7 +14,7 @@ import {
     userToBeValidatedOnUpdate
 } from './userMiddleware';
 
-const router = express.Router();
+const router: Router = express.Router();
 
 router.get('/:id', findUserByIdMiddleware, getUserByIdHandler);
 router.get('/', getUsersByQueryHandler);

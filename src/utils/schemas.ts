@@ -1,9 +1,9 @@
-import Joi from 'joi';
+import Joi, { Schema } from 'joi';
 
 const MIN_AGE = 4;
 const MAX_AGE = 130;
 
-export const userSchema = Joi.object().keys({
+export const userSchema: Schema = Joi.object().keys({
     id: Joi.string(),
     login: Joi.string().required(),
     password: Joi.string()
