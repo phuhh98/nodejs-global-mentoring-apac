@@ -6,15 +6,15 @@ interface User {
     isDeleted: boolean;
 }
 
-export default class Userservice {
-    static instance: Userservice;
+export default class UserService {
+    static instance: UserService;
     private store: Array<User> = [];
-    static getInstance(): Userservice {
-        if (!Userservice.instance) {
-            Userservice.instance = new Userservice();
+    static getInstance(): UserService {
+        if (!UserService.instance) {
+            UserService.instance = new UserService();
         }
 
-        return Userservice.instance;
+        return UserService.instance;
     }
     getStore(): Array<User> {
         return this.store;
