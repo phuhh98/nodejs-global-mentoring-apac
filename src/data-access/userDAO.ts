@@ -34,15 +34,14 @@ export class UserDAO {
     }
 
     async createUser(user: IUser): Promise<IUser | null> {
-        const newUser = new this.userModel(user);
+        const newUser = this.userModel.build(user);
+        let savedUser: User | null = null;
         try {
-            await newUser.save();
+            savedUser = await newUser.save();
         } catch (err) {
-            if (err) {
-                return null;
-            }
+            return null;
         }
-        return user;
+        return savedUser?.dataValues as IUser;
     }
 
     async updateById(
@@ -52,15 +51,12 @@ export class UserDAO {
         const user: User | null = await this.userModel.findOne({
             where: { id: userId }
         });
-        if (user === null) {
-            return false;
-        }
         try {
-            await user.update({ ...payload });
+            await user?.update({ ...payload });
         } catch (err) {
             return false;
         }
-        return user.dataValues as IUser;
+        return user?.dataValues as IUser;
     }
 
     async markAsDeleted(userId: IUser['id']): Promise<IUser | false> {
