@@ -2,6 +2,7 @@ import path from 'path';
 import * as dotenv from 'dotenv';
 
 declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace NodeJS {
         interface ProcessEnv {
             SQL_HOST: string;

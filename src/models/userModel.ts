@@ -4,7 +4,7 @@ import {
     InferAttributes,
     InferCreationAttributes
 } from 'sequelize';
-import sequelize from '../loaders/dbLoader';
+import { sequelize } from '../loaders';
 
 export class User extends Model<
     InferAttributes<User>,
@@ -47,5 +47,5 @@ User.init(
 );
 
 User.sync()
-    .then(res => console.log('User model sync complete'))
+    .then(() => console.log('User model sync complete'))
     .catch(err => console.error('User model sync complete with error', err));

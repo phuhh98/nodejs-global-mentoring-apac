@@ -9,7 +9,7 @@ export const getUserByIdHandler = (req: Request, res: Response) => {
 };
 
 export const getUsersByQueryHandler = async (req: Request, res: Response) => {
-    let { limit, loginSubstring } = req.query;
+    const { limit, loginSubstring } = req.query;
     const limitedUserList = await Users.getAutoSuggestUsers(
         loginSubstring as string,
         !!parseInt(limit as string, 10) ? parseInt(limit as string, 10) : 5

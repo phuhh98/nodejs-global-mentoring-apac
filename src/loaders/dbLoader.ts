@@ -1,12 +1,12 @@
-const { Sequelize } = require('sequelize');
+import { Sequelize, Dialect } from 'sequelize';
 
-const sequelize = new Sequelize(
+export const sequelize = new Sequelize(
     process.env.SQL_DBNAME,
     process.env.SQL_USER,
     process.env.SQL_PWD,
     {
         host: process.env.SQL_HOST,
-        dialect: process.env.SQL_DBSYS,
+        dialect: process.env.SQL_DBSYS as Dialect,
         logging: false
     }
 );
@@ -20,5 +20,3 @@ async function testConnection() {
     }
 }
 testConnection();
-
-export default sequelize;

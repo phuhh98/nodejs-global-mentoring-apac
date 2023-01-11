@@ -61,7 +61,7 @@ export class UserService {
 
     async getAutoSuggestUsers(
         loginSubstring: string,
-        limit: number = 5
+        limit = 5
     ): Promise<Array<IUser>> {
         let limitedUserList = await this.userDAO.findWithLoginAndLimit(
             loginSubstring,

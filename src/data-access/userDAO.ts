@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { User } from '../models/userModel';
+import { User } from '../models';
 
 export interface IUser {
     id: string;
