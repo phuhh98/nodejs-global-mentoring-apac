@@ -1,0 +1,426 @@
+{
+	"info": {
+		"_postman_id": "78a38991-0ea9-4e45-965b-612d367d8a1a",
+		"name": "nodejs-mentor-program-hometask2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14333033"
+	},
+	"item": [
+		{
+			"name": "Create user - Duplicate secone one - can Invalid age",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Generate random username and password\r",
+							"const username = pm.variables.replaceIn(\"{{$randomUserName}}\");\r",
+							"const password = pm.variables.replaceIn(\"{{$randomPassword}}\");\r",
+							"const age = pm.variables.replaceIn(\"{{$randomInt}}\")\r",
+							"console.log(username, password);\r",
+							"\r",
+							"// save to environment variables \r",
+							"pm.environment.set('username', username);\r",
+							"pm.environment.set('password', password);\r",
+							"\r",
+							"// update username and password in request\r",
+							"pm.collectionVariables.set('login', pm.environment.get('username'));\r",
+							"pm.collectionVariables.set('password', password);\r",
+							"pm.collectionVariables.set('age', age);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.status === \"OK\") {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    postman.setEnvironmentVariable(\"id\", jsonData.id);\r",
+							"    postman.setEnvironmentVariable(\"username\", jsonData.login);\r",
+							"    postman.setEnvironmentVariable(\"password\", jsonData.password);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"login\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"age\": {{age}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/user",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create user - no duplicate - valid age value",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Generate random username and password\r",
+							"const username = pm.variables.replaceIn(\"{{$randomUserName}}\");\r",
+							"const password = pm.variables.replaceIn(\"{{$randomPassword}}\");\r",
+							"const age = getRandomInt(4, 130);\r",
+							"console.log(username, password);\r",
+							"\r",
+							"// save to environment variables \r",
+							"pm.environment.set('username', username);\r",
+							"pm.environment.set('password', password);\r",
+							"\r",
+							"// update username and password in request\r",
+							"pm.collectionVariables.set('login', username);\r",
+							"pm.collectionVariables.set('password', password);\r",
+							"pm.collectionVariables.set('age', age);\r",
+							"\r",
+							"function getRandomInt(min, max) {\r",
+							"  min = Math.ceil(min);\r",
+							"  max = Math.floor(max);\r",
+							"  return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.status === \"OK\") {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    postman.setEnvironmentVariable(\"id\", jsonData.id);\r",
+							"    postman.setEnvironmentVariable(\"username\", jsonData.login);\r",
+							"    postman.setEnvironmentVariable(\"password\", jsonData.password);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"login\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"age\": {{age}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/user",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user by Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.status === \"OK\") {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    postman.setEnvironmentVariable(\"id\", jsonData.id);\r",
+							"    postman.setEnvironmentVariable(\"username\", jsonData.login);\r",
+							"    postman.setEnvironmentVariable(\"password\", jsonData.password);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/user/{{id}}",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user info - valid age",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Generate random password and age\r",
+							"const newPassword = pm.variables.replaceIn(\"{{$randomPassword}}\");\r",
+							"const age = getRandomInt(4, 130);\r",
+							"\r",
+							"\r",
+							"// update username and password in request\r",
+							"pm.collectionVariables.set('username', pm.environment.get('username'));\r",
+							"pm.collectionVariables.set('password', pm.environment.get('password'));\r",
+							"pm.collectionVariables.set('newPassword', newPassword);\r",
+							"pm.collectionVariables.set('age', age);\r",
+							"\r",
+							"// save to environment variables \r",
+							"// pm.environment.set('password', newPassword);\r",
+							"\r",
+							"function getRandomInt(min, max) {\r",
+							"  min = Math.ceil(min);\r",
+							"  max = Math.floor(max);\r",
+							"  return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.status === \"OK\") {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    postman.setEnvironmentVariable(\"id\", jsonData.id);\r",
+							"    postman.setEnvironmentVariable(\"username\", jsonData.login);\r",
+							"    postman.setEnvironmentVariable(\"password\", jsonData.password);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"credential\": {\r\n        \"login\": \"{{username}}\",\r\n        \"password\": \"{{password}}\"\r\n    },\r\n    \"update\" : {\r\n        \"password\": \"{{newPassword}}\",\r\n        \"age\": {{age}}\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/user/{{id}}",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user info - invalid age - invalid req",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Generate random username and password\r",
+							"const password = pm.variables.replaceIn(\"{{$randomPassword}}\");\r",
+							"const age = pm.variables.replaceIn(\"{{$randomInt}}\")\r",
+							"\r",
+							"// save to environment variables \r",
+							"pm.environment.set('password', password);\r",
+							"\r",
+							"// update username and password in request\r",
+							"pm.collectionVariables.set('password', password);\r",
+							"pm.collectionVariables.set('age', age);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.status === \"OK\") {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    postman.setEnvironmentVariable(\"id\", jsonData.id);\r",
+							"    postman.setEnvironmentVariable(\"username\", jsonData.login);\r",
+							"    postman.setEnvironmentVariable(\"password\", jsonData.password);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"password\": \"{{password}}\",\r\n  \"age\": {{age}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/user/{{id}}",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/user/{{id}}",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get users list with query substring and limit",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/user?limit=6&loginSubstring=Ar",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "6"
+						},
+						{
+							"key": "loginSubstring",
+							"value": "Ar"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "login",
+			"value": ""
+		},
+		{
+			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "age",
+			"value": ""
+		},
+		{
+			"key": "newPassword",
+			"value": ""
+		},
+		{
+			"key": "username",
+			"value": ""
+		}
+	]
+}
