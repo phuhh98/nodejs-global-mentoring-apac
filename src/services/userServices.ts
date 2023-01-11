@@ -1,78 +1,75 @@
-interface User {
-    id: string;
-    login: string;
-    password: string;
-    age: number;
-    isDeleted: boolean;
-}
+import { UserDAO, IUser } from '../data-access';
 
-export default class UserService {
+export class UserService {
     static instance: UserService;
-    private store: Array<User> = [];
+    private userDAO: UserDAO;
+    constructor(userDAO: UserDAO) {
+        this.userDAO = userDAO;
+    }
     static getInstance(): UserService {
         if (!UserService.instance) {
-            UserService.instance = new UserService();
+            UserService.instance = new UserService(UserDAO.getInstance());
         }
 
         return UserService.instance;
     }
-    getStore(): Array<User> {
-        return this.store;
-    }
 
-    addUser(user: User): User | Error {
-        const foundUser = this.findUserByLogin(user.login);
+    async addUser(user: IUser): Promise<IUser | Error> {
+        const foundUser = await this.findUserByLogin(user.login);
         if (!foundUser) {
-            this.store.push(user);
+            try {
+                await this.userDAO.createUser(user);
+            } catch (err) {
+                return new Error('db error');
+            }
         } else {
             return new Error('login is existed');
         }
         return user;
     }
-    findUserById(userId: User['id']): User | boolean {
-        const foundUser = this.store.find(user => user.id === userId);
-        return !!foundUser ? foundUser : false;
-    }
-    findIndexById(userId: User['id']): number {
-        const index = this.store.findIndex(user => user.id === userId);
-        return index;
-    }
-
-    findUserByLogin(userLogin: User['login']): User | boolean {
-        const foundUser = this.store.find(user => user.login === userLogin);
+    async findUserById(userId: IUser['id']): Promise<IUser | false> {
+        const foundUser = await this.userDAO.findById(userId);
         return !!foundUser ? foundUser : false;
     }
 
-    updateUserById(userId: User['id'], payload: User): User | Error {
-        const userIndex = this.findIndexById(userId);
-        if (userIndex >= 0) {
-            this.store[userIndex] = { ...this.store[userIndex], ...payload };
-        } else {
-            return new Error("user does not exist in this services's store");
-        }
-        return this.store[userIndex];
+    async findUserByLogin(userLogin: IUser['login']): Promise<IUser | false> {
+        const foundUser = await this.userDAO.findByLogin(userLogin);
+        return !!foundUser ? foundUser : false;
     }
 
-    markAsDeletedById(userId: User['id']): User | Error {
-        const userIndex: number = this.findIndexById(userId);
-        if (userIndex >= 0) {
-            this.store[userIndex].isDeleted = true;
-        } else {
-            return new Error('Delete unsuccessfully: user does not exist');
+    async updateUserById(
+        userId: IUser['id'],
+        payload: IUser
+    ): Promise<IUser | Error> {
+        const updateResult: IUser | boolean = await this.userDAO.updateById(
+            userId,
+            payload
+        );
+        if (!updateResult) {
+            return new Error('db error on update');
         }
-        return this.store[userIndex];
+        return updateResult;
     }
 
-    getAutoSuggestUsers(loginSubstring: string, limit = 5): Array<User> {
-        const limitedUserList = this.getStore()
-            .filter(
-                user =>
-                    user.login
-                        .toLowerCase()
-                        .indexOf(loginSubstring?.toLowerCase()) !== -1
-            )
-            .sort((userA, userB) => (userA.login > userB.login ? 1 : -1))
-            .slice(0, limit);
+    async markAsDeletedById(userId: IUser['id']): Promise<IUser | Error> {
+        const deleteResult = await this.userDAO.markAsDeleted(userId);
+        if (deleteResult) {
+            return deleteResult as IUser;
+        }
+        return new Error('Delete unsuccessfully: user does not exist');
+    }
+
+    async getAutoSuggestUsers(
+        loginSubstring: string,
+        limit: number = 5
+    ): Promise<Array<IUser>> {
+        let limitedUserList = await this.userDAO.findWithLoginAndLimit(
+            loginSubstring,
+            limit
+        );
+        if (limitedUserList === null) {
+            limitedUserList = [];
+        }
         return limitedUserList;
     }
 }

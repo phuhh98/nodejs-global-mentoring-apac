@@ -11,7 +11,7 @@ export class User extends Model<
     InferCreationAttributes<User>
 > {
     declare id: string;
-    declare username: string;
+    declare login: string;
     declare password: string;
     declare age: number;
     declare isDeleted: boolean;
@@ -24,7 +24,7 @@ User.init(
             unique: true,
             primaryKey: true
         },
-        username: {
+        login: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true
@@ -43,21 +43,9 @@ User.init(
             defaultValue: false
         }
     },
-    { sequelize, tableName: 'users' /*timestamps: false */ }
+    { sequelize, tableName: 'users', timestamps: false }
 );
 
 User.sync()
-    .then(res => console.log('sync complete', res))
-    .catch(err => console.error('sync complete with error', err));
-
-const user = new User({
-    id: '67006adb-3c81-4b9a-9315-f4cddb2c935b',
-    username: 'drenny0',
-    password: 'vgeaddLa',
-    age: 110,
-    isDeleted: true
-});
-
-user.save()
-    .then(res => console.log('save success', res))
-    .catch(err => console.log('save failed', err));
+    .then(res => console.log('User model sync complete'))
+    .catch(err => console.error('User model sync complete with error', err));

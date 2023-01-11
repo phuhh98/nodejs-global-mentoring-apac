@@ -1,7 +1,6 @@
 import express, { Router } from 'express';
 
-import { validateSchema } from '../utils/validate';
-import { userSchema } from '../utils/schemas';
+import { validateSchema, userSchema } from '../utils';
 import {
     getUserByIdHandler,
     getUsersByQueryHandler,
@@ -14,17 +13,17 @@ import {
     userToBeValidatedOnUpdate
 } from './userMiddleware';
 
-const router: Router = express.Router();
+export const userRouter: Router = express.Router();
 
-router.get('/:id', findUserByIdMiddleware, getUserByIdHandler);
-router.get('/', getUsersByQueryHandler);
-router.post(
+userRouter.get('/:id', findUserByIdMiddleware, getUserByIdHandler);
+userRouter.get('/', getUsersByQueryHandler);
+userRouter.post(
     '/',
     userToBeValidatedOnCreation,
     validateSchema(userSchema),
     createUserHandler
 );
-router.patch(
+userRouter.patch(
     '/:id',
     findUserByIdMiddleware,
     validateLoginCredential,
@@ -32,6 +31,4 @@ router.patch(
     validateSchema(userSchema),
     updateUserHandler
 );
-router.delete('/:id', findUserByIdMiddleware, deleteUserHandler);
-
-export default router;
+userRouter.delete('/:id', findUserByIdMiddleware, deleteUserHandler);

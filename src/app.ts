@@ -1,5 +1,6 @@
+import './loaders';
 import express, { Express, Request, Response } from 'express';
-import userRouter from './routes/userRouter';
+import { userRouter } from './controllers';
 
 const app: Express = express();
 
