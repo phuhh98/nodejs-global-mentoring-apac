@@ -1,70 +1,70 @@
 import { Request, Response, NextFunction } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import userService from '../services/userServices';
-const Users = userService.getInstance();
+import { UserService } from '../services';
+const Users = UserService.getInstance();
 
 export const getUserByIdHandler = (req: Request, res: Response) => {
     const { user } = res.locals;
     res.status(200).json(user);
 };
 
-export const getUsersByQueryHandler = (req: Request, res: Response) => {
+export const getUsersByQueryHandler = async (req: Request, res: Response) => {
     const { limit, loginSubstring } = req.query;
-    const limitedUserList = Users.getAutoSuggestUsers(
+    const limitedUserList = await Users.getAutoSuggestUsers(
         loginSubstring as string,
-        parseInt(limit as string, 10)
+        !!parseInt(limit as string, 10) ? parseInt(limit as string, 10) : 5
     );
     res.status(200).json(limitedUserList);
 };
 
-export const createUserHandler = (
+export const createUserHandler = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     const user = { id: uuidv4(), ...req.body, isDeleted: false };
 
-    const result = Users.addUser(user);
+    const result = await Users.addUser(user);
     if (result instanceof Error) {
         return next({ status: 400, message: result.message });
     }
     res.status(200).send(result);
 };
 
-export const updateUserHandler = (
+export const updateUserHandler = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     const { user } = res.locals;
     const { update: updateDetails } = req.body;
-    const result = Users.updateUserById(user.id, updateDetails);
+    const result = await Users.updateUserById(user.id, updateDetails);
     if (result instanceof Error) {
         return next({ status: 400, message: result.message });
     }
     res.status(200).send(result);
 };
 
-export const deleteUserHandler = (
+export const deleteUserHandler = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     const { user } = res.locals;
-    const result = Users.markAsDeletedById(user.id);
+    const result = await Users.markAsDeletedById(user.id);
     if (result instanceof Error) {
         return next({ status: 400, message: result.message });
     }
     res.status(200).send('user deleted');
 };
 
-export const findUserByIdMiddleware = (
+export const findUserByIdMiddleware = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     const { id: userId } = req.params;
-    const user = Users.findUserById(userId);
+    const user = await Users.findUserById(userId);
     if (!user) {
         res.status(400).send('user does not exist');
     }
